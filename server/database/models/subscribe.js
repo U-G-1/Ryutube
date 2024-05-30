@@ -13,7 +13,7 @@ module.exports = class subscribe extends Sequelize.Model {
                 type: Sequelize.STRING,
                 allowNull:false,
             },
-            chaId: {
+            channelId: {
                 type: Sequelize.STRING,
                 allowNull:false,
             },

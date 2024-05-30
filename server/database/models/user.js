@@ -39,7 +39,21 @@ module.exports = class user extends Sequelize.Model {
         );
     }
     static associate(db) {
-        db.user.hasMany(db.channel,{ foreignKey: 'userId', sorceKey: 'uid'});
-        db.user.hasMany(db.comment, {foreignKey: 'userId', sorceKey: 'uid'});
+        this.hasMany(models.comment,{
+            sourceKey: 'uid',
+            foreignKey: 'userId',
+        });
+        this.hasMany(models.subscribe,{
+            sourceKey: 'uid',
+            foreignKey: 'userId',
+        });
+        this.hasMany(models.videoLike,{
+            sourceKey: 'uid',
+            foreignKey: 'userId',
+        });
+        this.hasMany(models.videoDislike,{
+            sourceKey: 'uid',
+            foreignKey: 'userId',
+        });
     }
 };

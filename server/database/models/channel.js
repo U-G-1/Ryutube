@@ -32,6 +32,17 @@ module.exports = class channel extends Sequelize.Model {
         );
     }
     static associate(db) {
-        db.channel.belongsTo(db.user, { targetKey:'uid', foreignKey:'userid' });
+        this.belongsTo(models.user,{
+            foreignKey: 'userId',
+            targetKey: 'uid',
+        });
+        this.hasMany(models.subscribe,{
+            sourceKey: 'idx',
+            foreignKey: 'channelId',
+        });
+        this.hasMany(models.vedio,{
+            sourceKey: 'idx',
+            foreignKey: 'channelId',
+        });
     }
 };
