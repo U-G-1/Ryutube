@@ -39,14 +39,7 @@ module.exports = class user extends Sequelize.Model {
         );
     }
     static associate(db) {
-        this.hasMany(models.Comment,{
-            
-        });
-        this.hasMany(models.Subscribe);
-        this.hasMany(models.VideoLike);
-        this.hasMany(models.VideoDislike);
+        db.user.hasMany(db.channel,{ foreignKey: 'userId', sorceKey: 'uid'});
+        db.user.hasMany(db.comment, {foreignKey: 'userId', sorceKey: 'uid'});
     }
-    // static associate(db) {
-    //     db.
-    // }
 };

@@ -31,7 +31,7 @@ module.exports = class channel extends Sequelize.Model {
         }
         );
     }
-    // static associate(db) {
-    //     db.
-    // }
+    static associate(db) {
+        db.channel.belongsTo(db.user, { targetKey:'uid', foreignKey:'userid' });
+    }
 };
