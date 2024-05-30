@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.19.1",
-    "mysql2": "^3.9.7",
+    "mysql2": "^3.9.9",
     "sequelize": "^6.37.3",
     "sequelize-cli": "^6.6.2"
   },

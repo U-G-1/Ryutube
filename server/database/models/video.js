@@ -42,7 +42,18 @@ module.exports = class video extends Sequelize.Model {
         }
         );
     }
-    // static associate(db) {
-    //     db.
-    // }
+    static associate(db) {
+        this.hasMany(models.comment,{
+            sourceKey: 'idx',
+            foreignKey: 'videoId',
+        });
+        this.hasMany(models.videoLike,{
+            sourceKey: 'idx',
+            foreignKey: 'videoId',
+        });
+        this.hasMany(models.videoDisLike,{
+            sourceKey: 'idx',
+            foreignKey: 'videoId',
+        });
+    }
 };
