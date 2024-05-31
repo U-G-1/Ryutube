@@ -1,31 +1,49 @@
-const Sequelize = require("sequelize");
+"use strict";
 
-module.exports = class subscribe extends Sequelize.Model {
-    static init(sequelize) {
-        return super.init({
-            idx: {
-                type: Sequelize.INTEGER,
-                unique: true,
-                allowNull:false,
-                autoIncrement:true,
-            },
-            userId: {
-                type: Sequelize.STRING,
-                allowNull:false,
-            },
-            channelId: {
-                type: Sequelize.STRING,
-                allowNull:false,
-            },
-            timeStemp: {
-                type: Sequelize.DATE,
-                allowNull:false,
-                defaultValue:Sequelize.NOW,
-            },
-        }
-        );
+const { Model, DataTypes } = require("sequelize");
+
+module.exports = (sequelize) => {
+  class Subscribe extends Model {
+    static associate(models) {
+      this.belongsTo(models.User, {
+        foreignKey: "userId",
+        targetKey: "uid",
+      });
+      this.belongsTo(models.Channel, {
+        foreignKey: "channelId",
+        targetKey: "idx",
+      });
     }
-    // static associate(db) {
-    //     db.
-    // }
+  }
+
+  Subscribe.init(
+    {
+      idx: {
+        type: DataTypes.INTEGER,
+        unique: true,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      userId: {
+        type: DataTypes.INTEGER, // 변경: STRING -> INTEGER
+        allowNull: false,
+      },
+      channelId: {
+        type: DataTypes.INTEGER, // 변경: STRING -> INTEGER
+        allowNull: false,
+      },
+      timeStemp: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+    },
+    {
+      sequelize,
+      modelName: "Subscribe",
+    }
+  );
+
+  return Subscribe;
 };

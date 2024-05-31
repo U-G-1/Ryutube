@@ -1,48 +1,58 @@
-const Sequelize = require("sequelize");
+"use strict";
 
-module.exports = class channel extends Sequelize.Model {
-    static init(sequelize) {
-        return super.init({
-            idx: {
-                type: Sequelize.INTEGER,
-                unique: true,
-                allowNull:false,
-                autoIncrement:true,
-            },
-            userId: {
-                type: Sequelize.INTEGER,
-                unique: true,
-                allowNull:false,
-            },
-            name: {
-                type: Sequelize.STRING,
-                allowNull:false,
-            },
-            crdt: {
-                type: Sequelize.DATE,
-                allowNull:false,
-                defaultValue:Sequelize.NOW,
-            },
-            updt: {
-                type: Sequelize.DATE,
-                allowNull:false,
-                defaultValue:Sequelize.NOW,
-            },
-        }
-        );
+const { Model, DataTypes } = require("sequelize");
+
+module.exports = (sequelize) => {
+  class Channel extends Model {
+    static associate(models) {
+      this.belongsTo(models.User, {
+        foreignKey: "userId",
+        targetKey: "uid",
+      });
+      this.hasMany(models.Subscribe, {
+        sourceKey: "idx",
+        foreignKey: "channelId",
+      });
+      this.hasMany(models.Video, {
+        sourceKey: "idx",
+        foreignKey: "channelId",
+      });
     }
-    static associate(db) {
-        this.belongsTo(models.user,{
-            foreignKey: 'userId',
-            targetKey: 'uid',
-        });
-        this.hasMany(models.subscribe,{
-            sourceKey: 'idx',
-            foreignKey: 'channelId',
-        });
-        this.hasMany(models.vedio,{
-            sourceKey: 'idx',
-            foreignKey: 'channelId',
-        });
+  }
+
+  Channel.init(
+    {
+      idx: {
+        type: DataTypes.INTEGER,
+        unique: true,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      crdt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      updt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+    },
+    {
+      sequelize,
+      modelName: "Channel",
     }
+  );
+
+  return Channel;
 };

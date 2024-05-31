@@ -1,59 +1,70 @@
-const Sequelize = require("sequelize");
+"use strict";
 
-module.exports = class user extends Sequelize.Model {
-    static init(sequelize) {
-        return super.init({
-            uid: {
-                type: Sequelize.INTEGER,
-                unique: true,
-                allowNull:false,
-                autoIncrement:true,
-            },
-            email: {
-                type: Sequelize.STRING,
-                unique: true,
-                allowNull:false,
-            },
-            password: {
-                type: Sequelize.STRING,
-                allowNull:false,
-            },
-            name: {
-                type: Sequelize.STRING,
-                allowNull:false,
-            },
-            imgpath: {
-                type: Sequelize.STRING,
-            },
-            crdt: {
-                type: Sequelize.DATE,
-                allowNull:false,
-                defaultValue:Sequelize.NOW,
-            },
-            updt: {
-                type: Sequelize.DATE,
-                allowNull:false,
-                defaultValue:Sequelize.NOW,
-            },
-        }
-        );
+const { Model, DataTypes } = require("sequelize");
+
+module.exports = (sequelize) => {
+  class User extends Model {
+    static associate(models) {
+      this.hasMany(models.Comment, {
+        sourceKey: "uid",
+        foreignKey: "userId",
+      });
+      this.hasMany(models.Subscribe, {
+        sourceKey: "uid",
+        foreignKey: "userId",
+      });
+      this.hasMany(models.VideoLike, {
+        sourceKey: "uid",
+        foreignKey: "userId",
+      });
+      this.hasMany(models.VideoDislike, {
+        sourceKey: "uid",
+        foreignKey: "userId",
+      });
     }
-    static associate(db) {
-        this.hasMany(models.comment,{
-            sourceKey: 'uid',
-            foreignKey: 'userId',
-        });
-        this.hasMany(models.subscribe,{
-            sourceKey: 'uid',
-            foreignKey: 'userId',
-        });
-        this.hasMany(models.videoLike,{
-            sourceKey: 'uid',
-            foreignKey: 'userId',
-        });
-        this.hasMany(models.videoDislike,{
-            sourceKey: 'uid',
-            foreignKey: 'userId',
-        });
+  }
+
+  User.init(
+    {
+      uid: {
+        type: DataTypes.INTEGER,
+        unique: true,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      email: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      imgpath: {
+        type: DataTypes.STRING,
+      },
+      crdt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      updt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+    },
+    {
+      sequelize,
+      modelName: "User",
     }
+  );
+
+  return User;
 };

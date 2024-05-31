@@ -1,31 +1,49 @@
-const Sequelize = require("sequelize");
+"use strict";
 
-module.exports = class videoLike extends Sequelize.Model {
-    static init(sequelize) {
-        return super.init({
-            idx: {
-                type: Sequelize.INTEGER,
-                unique: true,
-                allowNull:false,
-                autoIncrement:true,
-            },
-            userId: {
-                type: Sequelize.STRING,
-                allowNull:false,
-            },
-            videoId: {
-                type: Sequelize.STRING,
-                allowNull:false,
-            },
-            timeStemp: {
-                type: Sequelize.DATE,
-                allowNull:false,
-                defaultValue:Sequelize.NOW,
-            },
-        }
-        );
+const { Model, DataTypes } = require("sequelize");
+
+module.exports = (sequelize) => {
+  class VideoLike extends Model {
+    static associate(models) {
+      this.belongsTo(models.User, {
+        foreignKey: "userId",
+        targetKey: "uid",
+      });
+      this.belongsTo(models.Video, {
+        foreignKey: "videoId",
+        targetKey: "idx",
+      });
     }
-    // static associate(db) {
-    //     db.
-    // }
+  }
+
+  VideoLike.init(
+    {
+      idx: {
+        type: DataTypes.INTEGER,
+        unique: true,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      userId: {
+        type: DataTypes.INTEGER, // 변경: STRING -> INTEGER
+        allowNull: false,
+      },
+      videoId: {
+        type: DataTypes.INTEGER, // 변경: STRING -> INTEGER
+        allowNull: false,
+      },
+      timeStemp: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+    },
+    {
+      sequelize,
+      modelName: "VideoLike",
+    }
+  );
+
+  return VideoLike;
 };

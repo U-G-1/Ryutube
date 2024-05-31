@@ -1,40 +1,58 @@
-const Sequelize = require("sequelize");
+"use strict";
 
-module.exports = class comment extends Sequelize.Model {
-    static init(sequelize) {
-        return super.init({
-            idx: {
-                type: Sequelize.INTEGER,
-                unique: true,
-                allowNull:false,
-                autoIncrement:true,
-            },
-            comment: {
-                type: Sequelize.STRING,
-                allowNull:false,
-            },
-            userId: {
-                type: Sequelize.STRING,
-                allowNull:false,
-            },
-            videoId: {
-                type: Sequelize.STRING,
-                allowNull:false,
-            },
-            crdt: {
-                type: Sequelize.DATE,
-                allowNull:false,
-                defaultValue:Sequelize.NOW,
-            },
-            updt: {
-                type: Sequelize.DATE,
-                allowNull:false,
-                defaultValue:Sequelize.NOW,
-            },
-        }
-        );
+const { Model, DataTypes } = require("sequelize");
+
+module.exports = (sequelize) => {
+  class Comment extends Model {
+    static associate(models) {
+      this.belongsTo(models.User, {
+        foreignKey: "userId",
+        targetKey: "uid",
+      });
+      this.belongsTo(models.Video, {
+        foreignKey: "videoId",
+        targetKey: "idx", // 수정: targetKey를 idx로 설정
+      });
     }
-    // static associate(db) {
-    //     db.
-    // }
+  }
+
+  Comment.init(
+    {
+      idx: {
+        type: DataTypes.INTEGER,
+        unique: true,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      comment: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      videoId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      crdt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      updt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+    },
+    {
+      sequelize,
+      modelName: "Comment",
+    }
+  );
+
+  return Comment;
 };

@@ -1,59 +1,73 @@
-const Sequelize = require("sequelize");
+"use strict";
 
-module.exports = class video extends Sequelize.Model {
-    static init(sequelize) {
-        return super.init({
-            idx: {
-                type: Sequelize.INTEGER,
-                unique: true,
-                allowNull:false,
-                autoIncrement:true,
-            },
-            channelId: {
-                type: Sequelize.STRING,
-                unique: true,
-                allowNull:false,
-            },
-            name: {
-                type: Sequelize.STRING,
-                allowNull:false,
-            },
-            path: {
-                type: Sequelize.STRING,
-                allowNull:false,
-            },
-            count: {
-                type: Sequelize.STRING,
-                allowNull:false,
-            },
-            description: {
-                type: Sequelize.STRING,
-            },
-            crdt: {
-                type: Sequelize.DATE,
-                allowNull:false,
-                defaultValue:Sequelize.NOW,
-            },
-            updt: {
-                type: Sequelize.DATE,
-                allowNull:false,
-                defaultValue:Sequelize.NOW,
-            },
-        }
-        );
+const { Model, DataTypes } = require("sequelize");
+
+module.exports = (sequelize) => {
+  class Video extends Model {
+    static associate(models) {
+      this.hasMany(models.Comment, {
+        sourceKey: "idx",
+        foreignKey: "videoId",
+      });
+      this.hasMany(models.VideoLike, {
+        sourceKey: "idx",
+        foreignKey: "videoId",
+      });
+      this.hasMany(models.VideoDislike, {
+        sourceKey: "idx",
+        foreignKey: "videoId",
+      });
+      this.belongsTo(models.Channel, {
+        foreignKey: "channelId",
+        targetKey: "idx",
+      });
     }
-    static associate(db) {
-        this.hasMany(models.comment,{
-            sourceKey: 'idx',
-            foreignKey: 'videoId',
-        });
-        this.hasMany(models.videoLike,{
-            sourceKey: 'idx',
-            foreignKey: 'videoId',
-        });
-        this.hasMany(models.videoDisLike,{
-            sourceKey: 'idx',
-            foreignKey: 'videoId',
-        });
+  }
+
+  Video.init(
+    {
+      idx: {
+        type: DataTypes.INTEGER,
+        unique: true,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      channelId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      path: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      count: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.STRING,
+      },
+      crdt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      updt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+    },
+    {
+      sequelize,
+      modelName: "Video",
     }
+  );
+
+  return Video;
 };

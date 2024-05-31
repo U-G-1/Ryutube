@@ -21,8 +21,8 @@ app.get('/',(req, res)=>{
     res.send('Hello, express');
 });
 
-app.use("/", mainRouter);
-app.use('/user', userRouter);
+//app.use("/", mainRouter);
+//app.use('/user', userRouter);
 
 
 app.listen(port, () => {
